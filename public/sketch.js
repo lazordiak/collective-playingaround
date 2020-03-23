@@ -32,6 +32,7 @@ socket.on('connect', function() {
 
   // Listen for changes to text
   socket.on('drawPoint', function(drawData) {
+    //console.log(drawData);
     // Update line on screen
     drawLine(drawData);
   });
@@ -39,7 +40,7 @@ socket.on('connect', function() {
   socket.on('allPlayers', function(data) {
     players = data;
   });
-  
+
 });
 
 //keep track of all users
@@ -60,20 +61,30 @@ let getRandomColor = () => {
   return color;
 }
 
+function hexToRgb(hex) {
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  } : null;
+}
+
 function setup() {
 
-  myColor = getRandomColor();
+  createCanvas(windowWidth, windowHeight);
+  background('white');
+  myColor = hexToRgb(getRandomColor());
 
   frameRate(30);
-  createCanvas(windowWidth, windowHeight);
 
 }
 
 // Draw line
 function drawLine(drawData) {
   //then we are drawing the line in the correct color
-  stroke(drawData.data.color,drawData.data.inkLeft);
-  line(drawData.data.x,drawData.data.y,drawData.data.pX,drawData.data.pY);
+  stroke(drawData.color.r,drawData.color.g,drawData.color.b,drawData.inkLeft);
+  line(drawData.x * width,drawData.y *height,drawData.pX *width,drawData.pY *height);
 }
 
 function keyPressed() {
@@ -106,7 +117,7 @@ function mouseDragged() {
       myTurn = false;
       socket.emit('nextPlayer');
     }
-    ink -= 1.5;
+    ink -= 2;
   }
 }
 
