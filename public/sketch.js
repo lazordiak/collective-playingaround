@@ -12,6 +12,7 @@ socket.on('connect', function() {
   console.log("Connected", socket.id);
 
   socket.on('setPrompt', function ({ prompt }) {
+    document.getElementById("prompt").innerHTML = prompt
     console.log(prompt)
   });
 
@@ -72,7 +73,7 @@ function hexToRgb(hex) {
 
 function setup() {
 
-  createCanvas(windowWidth, windowHeight);
+  createCanvas(1000, 600);
   background('white');
   myColor = hexToRgb(getRandomColor());
 
