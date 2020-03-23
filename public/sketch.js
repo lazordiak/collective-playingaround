@@ -10,6 +10,36 @@ make sure it works??
 // Listen for confirmation of connection
 socket.on('connect', function() {
   console.log("Connected", socket.id);
+
+  socket.on('setPrompt', function ({ prompt }) {
+    console.log(prompt)
+  });
+
+  socket.on('gameFinished', function(){
+    background(255);
+    text("DONE", width/2, height/2);
+  });
+
+  socket.on('currentPlayer', function({ currentPlayer }){
+    if(currentPlayer === socket.id){
+      console.log(`ITS YOUR TURN DAWG`)
+      myTurn = true;
+      ink = 255;
+    } else {
+      console.log(`Current player: ${currentPlayer}`)
+    }
+  });
+
+  // Listen for changes to text
+  socket.on('drawPoint', function(drawData) {
+    // Update line on screen
+    drawLine(drawData);
+  });
+
+  socket.on('allPlayers', function(data) {
+    players = data;
+  });
+  
 });
 
 //keep track of all users
@@ -29,35 +59,6 @@ let getRandomColor = () => {
   }
   return color;
 }
-
-socket.on('setPrompt', function ({ prompt }) {
-  console.log(prompt)
-});
-
-socket.on('gameFinished', function(){
-  background(255);
-  text("DONE", width/2, height/2);
-});
-
-socket.on('currentPlayer', function({ currentPlayer }){
-  if(currentPlayer === socket.id){
-    console.log(`ITS YOUR TURN DAWG`)
-    myTurn = true;
-    ink = 255;
-  } else {
-    console.log(`Current player: ${currentPlayer}`)
-  }
-});
-
-// Listen for changes to text
-socket.on('drawPoint', function(drawData) {
-  // Update line on screen
-  drawLine(drawData);
-});
-
-socket.on('allPlayers', function(data) {
-  players = data;
-});
 
 function setup() {
 
